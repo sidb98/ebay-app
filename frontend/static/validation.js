@@ -118,16 +118,12 @@ function buildJsonData() {
 
     jsonObject.keyword = document.getElementById("keyword").value;
 
-    // var priceRange = {
-    //     from: document.getElementById("from").value,
-    //     to: document.getElementById("to").value
-    // }
 
-    // jsonObject.priceRange = priceRange;
+    const fromPrice = document.getElementById("from").value;
+    if (fromPrice != "") jsonObject.fromPrice = fromPrice;
 
-
-    jsonObject.fromPrice = document.getElementById("from").value;
-    jsonObject.toPrice = document.getElementById("to").value;
+    const toPrice = document.getElementById("to").value;
+    if (toPrice != "") jsonObject.toPrice = toPrice;
 
     var conditions = [];
     if (document.getElementById("new").checked) conditions.push("1000");
@@ -135,10 +131,11 @@ function buildJsonData() {
     if (document.getElementById("verygood").checked) conditions.push("4000");
     if (document.getElementById("good").checked) conditions.push("5000");
     if (document.getElementById("acceptable").checked) conditions.push("6000");
-    jsonObject.conditions = conditions;
+
+    if (conditions.length != 0) jsonObject.conditions = conditions;
 
 
-    if (!document.getElementById("return").checked) jsonObject.seller = "";
+    // if (!document.getElementById("return").checked) jsonObject.seller = "";
     if (document.getElementById("return").checked) jsonObject.seller = "Return Accepted";
 
     var shipping = [];
@@ -146,7 +143,7 @@ function buildJsonData() {
 
     // Uncomment the below line to enable expedited shipping
     // if (document.getElementById("expedited").checked) shipping.push("ExpeditedShippingType");
-    jsonObject.shipping = shipping;
+    if (shipping.length != 0) jsonObject.shipping = shipping;
 
     jsonObject.sortBy = document.getElementById("sortby").value;
 
@@ -172,7 +169,7 @@ function jsonToQueryString(json) {
 function sendSearchDataToBackend(jsonObject) {
 
     jsonData = JSON.stringify(jsonObject);
-    // console.log("New Json Data: " + jsonData)
+    console.log("Json Data sending" + jsonData)
 
     const searchQuery = jsonToQueryString(jsonObject);
     console.log("Search Query: " + searchQuery);
