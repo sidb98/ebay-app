@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>ebay Shopping</title>
+
+        <script src="validation.js"></script>
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+        <div id="content">
+            <div id="title" onclick="window.open('https://www.ebay.com', '_blank');">
+                <img src="res/eBayLogo.png" alt="ebay" id="ebay-logo">
+                <span id="shopping-tag">Shopping</span>
+            </div>
+            <form id="search-form">
+                <div class="block">
+                    <label for="keyword" class="tag">Keywords<span
+                            class="required-char">*</span>:</label>
+                    <input type="text" id="keyword" required/>
+                    <br>
+                </div>
+                <hr>
+
+                <div class="block">
+                    <label class="tag">Price Range:</label>
+                    <label for="from">From</label>
+                    <input type="number" id="from">
+                    <label for="to" style="margin-left: 10px;">to</label>
+                    <input type="number" id="to" size="1"><br>
+                </div>
+                <hr>
+
+                <div class="block">
+                    <label class="tag">Condtion:</label>
+                    <input type="checkbox" id="new">
+                    <label for="new">New</label>
+                    <input type="checkbox" id="used">
+                    <label for="used">Used</label>
+                    <input type="checkbox" id="verygood">
+                    <label for="verygood">Very Good</label>
+                    <input type="checkbox" id="good">
+                    <label for="good">Good</label>
+                    <input type="checkbox" id="acceptable">
+                    <label for="acceptable">Acceptable</label><br>
+                </div>
+                <hr>
+                <div class="block">
+                    <label class="tag">Seller:</label>
+                    <input type="checkbox" id="return">
+                    <label for="return">Return Accepted</label><br>
+                </div>
+                <hr>
+                <div class="block">
+                    <label class="tag">Shipping:</label>
+                    <input type="checkbox" id="free">
+                    <label for="free">Free Shipping</label>
+                    <input type="checkbox" id="expedited">
+                    <label for="expedited">Expedited Shipping</label><br>
+                </div>
+                <hr>
+
+                <div class="block">
+                    <label class="tag">Sort by:</label>
+                    <select id="sortby">
+                        <option value="BestMatch">Best Match</option>
+                        <option value="CurrentPriceHighest">Price: highest first</option>
+                        <option value="PricePlusShippingHighest">Price +
+                            Shipping:
+                            highest first</option>
+                        <option value="PricePlusShippingLowest">Price +
+                            Shipping:
+                            lowest
+                            first</option>
+                    </select><br>
+                </div>
+                <hr>
+                <div class="block">
+                    <input type="reset" value="Clear" id="clear">
+                    <input type="button" value="Search" id="submit">
+                </div>
+            </form>
+
+            <h1 id="no-results"></h1>
+            <h1 id="item-details-label" style="display: none;">Item Details</h1>
+            <hr id="line" style="display: none;">
+
+            <input type="button" value="Back to search results"
+                id="back-to-search" style="display: none;">
+
+            <div id="item-results"></div>
+
+            <div id="single-item-results" style="display: none;"></div>
+
+            <input type="button" value="Show More" id="toggle-button"
+                style="display: none;">
+        </div>
+    </body>
+
+</html>
