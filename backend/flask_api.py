@@ -83,8 +83,8 @@ def createPayload(data):
     print("Payload:", payload)
     print("=" * 100)
 
-    with open("payload.json", "w") as f:
-        json.dump(payload, f)
+    # with open("payload.json", "w") as f:
+    #     json.dump(payload, f)
 
     return payload
 
@@ -231,8 +231,8 @@ def get_all_item():
         print("=" * 100)
 
         # saving response to json file
-        with open("respone-data-all-items.json", "w") as f:
-            json.dump(response.json(), f)
+        # with open("respone-data-all-items.json", "w") as f:
+        #     json.dump(response.json(), f)
 
         clean_json = cleanAllItemData(response.json())
         return clean_json
