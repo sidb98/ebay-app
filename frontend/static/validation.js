@@ -151,30 +151,17 @@ function buildJsonData() {
 }
 
 
-function jsonToQueryString(json) {
-    const params = [];
-    for (const key in json) {
-      if (json[key] instanceof Array) {
-        // Handle arrays by joining their values with commas
-        params.push(`${key}=${json[key].join(',')}`);
-      } else {
-        params.push(`${key}=${json[key]}`);
-      }
-    }
-    return params.join('&');
-  }
-  
-
 
 function sendSearchDataToBackend(jsonObject) {
+    
+    // https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
 
-    jsonData = JSON.stringify(jsonObject);
-    console.log("Json Data sending" + jsonData)
+    const searchParams = new URLSearchParams(jsonObject).toString();
+    console.log("Search Params: " + searchParams);
 
-    const searchQuery = jsonToQueryString(jsonObject);
-    console.log("Search Query: " + searchQuery);
 
-    const url = `/findAllItems?json=${encodeURIComponent(jsonData)}`;
+    const url = `/findAllItems?`+searchParams;
+    console.log("URL: " + url)
 
 
     const options = {
