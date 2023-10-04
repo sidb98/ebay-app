@@ -83,8 +83,8 @@ def createPayload(data):
     print("Payload:", payload)
     print("=" * 100)
 
-    with open("payload.json", "w") as f:
-        json.dump(payload, f)
+    # with open("payload.json", "w") as f:
+    #     json.dump(payload, f)
 
     return payload
 
@@ -98,7 +98,7 @@ def cleanAllItemData(json_data):
             == "0"
         ):
             return {"ack": "Failure"}
-
+        #TODO: Clean it up for missing conditions
         else:
             clean_json_data = {"ack": "Success", "total_fetched_items": 0, "items": []}
 
@@ -113,15 +113,19 @@ def cleanAllItemData(json_data):
                 cleaned_item = {}
                 cleaned_item["itemId"] = item["itemId"][0]
                 cleaned_item["title"] = item["title"][0]
-                cleaned_item["category"] = item["primaryCategory"][0]["categoryName"][0]
+
+                cleaned_item["category"] = item.get("primaryCategory", [{}])[0].get(
+                    "categoryName", "N/A"
+                )
 
                 condition_display_name = item.get("condition", [{}])[0].get(
                     "conditionDisplayName", "N/A"
                 )
+
                 cleaned_item["condition"] = condition_display_name
 
                 cleaned_item["price"] = float(
-                    item["sellingStatus"][0]["convertedCurrentPrice"][0]["__value__"]
+                    item.get("sellingStatus", [{}])[0].get("convertedCurrentPrice",[{}])[0].get("__value__", 0)
                 )
 
                 shipping_cost = float(
@@ -131,7 +135,12 @@ def cleanAllItemData(json_data):
                 )
                 cleaned_item["shipping"] = shipping_cost
 
-                cleaned_item["topRatedListing"] = bool(item["topRatedListing"][0])
+                cleaned_item["topRatedListing"] = False
+
+                if (item["topRatedListing"][0] == "true"):
+                    cleaned_item["topRatedListing"] = True
+
+
                 cleaned_item["link"] = item["viewItemURL"][0]
                 cleaned_item["galleryURL"] = item["galleryURL"][0]
 
@@ -143,8 +152,8 @@ def cleanAllItemData(json_data):
                     print("=" * 100)
                     break
 
-    # with open("cleaned-data-all-items.json", "w") as f:
-    #     json.dump(clean_json_data, f)
+    with open("cleaned-data-all-items.json", "w") as f:
+        json.dump(clean_json_data, f)
 
     return clean_json_data
 
@@ -174,7 +183,7 @@ def cleanSingleItemData(json_data):
         clean_json_data[spec.get("Name", "")] = spec.get("Value", [""])[0]
 
     # with open("cleaned-data-single-item.json", "w") as f:
-        # json.dump(clean_json_data, f)
+    # json.dump(clean_json_data, f)
 
     return clean_json_data
 
@@ -187,16 +196,31 @@ def index():
 
 @app.route("/findAllItems", methods=["GET"])
 def get_all_item():
-    try:
-        data = request.args.get("json")
-        data = json.loads(data)
-        print("=" * 100)
-        print("Received JSON data:", data)
-        print("=" * 100)
+    # from https://stackoverflow.com/questions/24892035/how-can-i-get-the-named-parameters-from-a-url-using-flask
+    keyword = request.args.get("keyword")
+    from_price = request.args.get("fromPrice")
+    to_price = request.args.get("toPrice")
+    conditions = request.args.get("conditions")
+    seller = request.args.get("seller")
+    shipping = request.args.get("shipping")
+    sort = request.args.get("sortBy")
 
-    except json.JSONDecodeError as e:
-        print("Invalid JSON data")
+    if conditions:
+        conditions = conditions.split(",")
 
+    data = {
+        "keyword": keyword,
+        "fromPrice": from_price,
+        "toPrice": to_price,
+        "conditions": conditions,
+        "seller": seller,
+        "shipping": shipping,
+        "sortBy": sort,
+    }
+
+    print("=" * 100)
+    print("Received data:", data)
+    print("=" * 100)
     api_url = "https://svcs.ebay.com/services/search/FindingService/v1"
     payload = createPayload(data)
     print("Sending request to eBay API for all items")

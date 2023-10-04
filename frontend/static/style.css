@@ -22,6 +22,7 @@
     font-size: 48px;
     vertical-align: middle;
     display: inline-block;
+    font-weight: bold;
 }
 
 /* Form Box */
@@ -30,7 +31,7 @@
     width: 480px;
     padding: 10px 40px;
     margin-top: 10px;
-    margin-bottom: 50px;
+    margin-bottom: 10px;
     border: 1px solid #000;
 
 }
@@ -41,6 +42,7 @@
 
 #search-form label {
     margin-right: 5px;
+    font-size: 16px;
 }
 
 .block {
@@ -94,6 +96,7 @@ hr {
 
 #item-details-label{
     margin: 2px;
+    margin-top: 10px;
 }
 
 #item-results {
