@@ -1,3 +1,4 @@
+// From https://www.javascripttutorial.net/javascript-dom/javascript-domcontentloaded/
 document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("clear").addEventListener("click", (event) => {
@@ -40,13 +41,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const toggleButton = document.getElementById('toggle-button');
         const items = document.querySelectorAll('.item');
 
+        // "how to loop through  data selected using querySelectorAll in js" prompt(7 line) . ChatGPT September 25 Version, OpenAI, 25th Sep. 2023, chat.openai.com/chat.
         if (toggleButton.value == 'Show More') {
             items.forEach(item => {
                 item.style.display = '';
             }
             );
             toggleButton.value = 'Show Less';
-            console.log("Toggle button showing more items");
+            // console.log("Toggle button showing more items");
 
         }
         else {
@@ -55,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             );
             toggleButton.value = 'Show More';
-            console.log("Toggle button showing less items");
+            // console.log("Toggle button showing less items");
         }
 
 
@@ -171,6 +173,7 @@ function sendSearchDataToBackend(jsonObject) {
         },
     };
 
+    // from https://stackoverflow.com/questions/48841097/receive-and-process-json-using-fetch-api-in-javascript
     fetch(url, options)
         .then(response => {
             if (response.ok) {
@@ -211,6 +214,8 @@ function allItemsTemplate(item) {
 
     const image = document.createElement('img');
     image.src = item.galleryURL;
+    image.style.maxWidth = '150px';     // from https://www.w3schools.com/jsref/prop_style_maxwidth.asp
+    image.style.maxHeight = '200px';
 
     const textElement = document.createElement('div');
     textElement.classList.add('text-container');

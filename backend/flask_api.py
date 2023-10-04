@@ -9,7 +9,7 @@ from backend.ebay_oauth_token import OAuthToken
 
 
 app = Flask(__name__, static_url_path="", static_folder="../frontend/static")
-app.json.sort_keys = False
+app.json.sort_keys = False    #from https://stackoverflow.com/questions/43263356/prevent-flask-jsonify-from-sorting-the-data
 
 dotenv.load_dotenv(dotenv.find_dotenv())
 
@@ -18,8 +18,6 @@ def createPayload(data):
     keyword = data["keyword"]
     sort = data["sortBy"]
 
-    # TODO: sometimes i only get lesser than 10 items than the total fetched items
-    # https://piazza.com/class/lkyn4sr3nlj3/post/149
     payload = {
         "OPERATION-NAME": "findItemsByKeywords",
         "SERVICE-VERSION": "1.0.0",
@@ -32,9 +30,6 @@ def createPayload(data):
     }
 
     item_filter_idx = 0
-
-    # from_price = data["priceRange"]["from"]
-    # to_price = data["priceRange"]["to"]
 
     from_price = data["fromPrice"]
     to_price = data["toPrice"]
@@ -98,7 +93,6 @@ def cleanAllItemData(json_data):
             == "0"
         ):
             return {"ack": "Failure"}
-        #TODO: Clean it up for missing conditions
         else:
             clean_json_data = {"ack": "Success", "total_fetched_items": 0, "items": []}
 
@@ -113,6 +107,8 @@ def cleanAllItemData(json_data):
                 cleaned_item = {}
                 cleaned_item["itemId"] = item["itemId"][0]
                 cleaned_item["title"] = item["title"][0]
+
+                # from https://stackoverflow.com/questions/9285086/access-dict-key-and-return-none-if-doesnt-exist
 
                 cleaned_item["category"] = item.get("primaryCategory", [{}])[0].get(
                     "categoryName", "N/A"
@@ -144,6 +140,9 @@ def cleanAllItemData(json_data):
                 cleaned_item["link"] = item["viewItemURL"][0]
                 cleaned_item["galleryURL"] = item["galleryURL"][0]
 
+                if cleaned_item["galleryURL"] == "":
+                    cleaned_item["galleryURL"] = "res/ebay_default.jpg"
+
                 clean_json_data["items"].append(cleaned_item)
 
                 if idx == 9:
@@ -152,8 +151,8 @@ def cleanAllItemData(json_data):
                     print("=" * 100)
                     break
 
-    with open("cleaned-data-all-items.json", "w") as f:
-        json.dump(clean_json_data, f)
+    # with open("cleaned-data-all-items.json", "w") as f:
+    #     json.dump(clean_json_data, f)
 
     return clean_json_data
 
@@ -178,7 +177,6 @@ def cleanSingleItemData(json_data):
         + item_data.get("ReturnPolicy", {}).get("ReturnsWithin", "")
     )
 
-    # clean_json_data["itemSpecs"] = defaultdict(str)
     for spec in item_data.get("ItemSpecifics", {}).get("NameValueList", []):
         clean_json_data[spec.get("Name", "")] = spec.get("Value", [""])[0]
 
@@ -225,6 +223,8 @@ def get_all_item():
     payload = createPayload(data)
     print("Sending request to eBay API for all items")
     response = requests.get(api_url, params=payload)
+
+    # "how to send data from flask to ebay api" prompt(7 line) . ChatGPT September 25 Version, OpenAI, 25th Sep. 2023, chat.openai.com/chat.
 
     if response.status_code == 200:
         print(f"Sending response to client {response.status_code}")
