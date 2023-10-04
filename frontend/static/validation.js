@@ -112,7 +112,7 @@ function validateForm() {
 
 function buildJsonData() {
 
-    // "how to put all the selected options from this form into a json object?" prompt. ChatGPT3.5, 11 Sep ChatGPT August 3 Version
+    // "how to put all the selected options from this form into a json object?" prompt(2 line). ChatGPT3.5, 11 Sep ChatGPT August 3 Version
 
     var jsonObject = {};
 
@@ -154,7 +154,7 @@ function buildJsonData() {
 
 function sendSearchDataToBackend(jsonObject) {
     
-    // https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
+    // From https://stackoverflow.com/questions/111529/how-to-create-query-parameters-in-javascript
 
     const searchParams = new URLSearchParams(jsonObject).toString();
     console.log("Search Params: " + searchParams);
@@ -228,6 +228,9 @@ function allItemsTemplate(item) {
     const condition = document.createElement('p');
     condition.textContent = `Condition: ${item.condition}`;
 
+    if(item.condition == "N/A") condition.style.visibility = 'hidden';
+
+
     if (item.topRatedListing) {
         const topRatedImage = document.createElement('img');
         topRatedImage.classList.add('top-rated-image');
@@ -240,6 +243,8 @@ function allItemsTemplate(item) {
         price.textContent = `Price: $${item.price} (+ $${item.shipping} for shipping)`;
     else
         price.textContent = `Price: $${item.price}`;
+
+    if(item.price == 0) price.style.visibility = 'hidden';
 
     category.appendChild(redirectImage);
 

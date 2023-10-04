@@ -98,7 +98,7 @@ def cleanAllItemData(json_data):
             == "0"
         ):
             return {"ack": "Failure"}
-
+        #TODO: Clean it up for missing conditions
         else:
             clean_json_data = {"ack": "Success", "total_fetched_items": 0, "items": []}
 
@@ -113,19 +113,19 @@ def cleanAllItemData(json_data):
                 cleaned_item = {}
                 cleaned_item["itemId"] = item["itemId"][0]
                 cleaned_item["title"] = item["title"][0]
-                cleaned_item["category"] = item["primaryCategory"][0]["categoryName"][0]
+
+                cleaned_item["category"] = item.get("primaryCategory", [{}])[0].get(
+                    "categoryName", "N/A"
+                )
 
                 condition_display_name = item.get("condition", [{}])[0].get(
                     "conditionDisplayName", "N/A"
                 )
 
-                if condition_display_name =="N/A":
-                    continue
-
                 cleaned_item["condition"] = condition_display_name
 
                 cleaned_item["price"] = float(
-                    item["sellingStatus"][0]["convertedCurrentPrice"][0]["__value__"]
+                    item.get("sellingStatus", [{}])[0].get("convertedCurrentPrice",[{}])[0].get("__value__", 0)
                 )
 
                 shipping_cost = float(
@@ -152,8 +152,8 @@ def cleanAllItemData(json_data):
                     print("=" * 100)
                     break
 
-    # with open("cleaned-data-all-items.json", "w") as f:
-    #     json.dump(clean_json_data, f)
+    with open("cleaned-data-all-items.json", "w") as f:
+        json.dump(clean_json_data, f)
 
     return clean_json_data
 
@@ -196,7 +196,7 @@ def index():
 
 @app.route("/findAllItems", methods=["GET"])
 def get_all_item():
-    # https://stackoverflow.com/questions/24892035/how-can-i-get-the-named-parameters-from-a-url-using-flask
+    # from https://stackoverflow.com/questions/24892035/how-can-i-get-the-named-parameters-from-a-url-using-flask
     keyword = request.args.get("keyword")
     from_price = request.args.get("fromPrice")
     to_price = request.args.get("toPrice")
